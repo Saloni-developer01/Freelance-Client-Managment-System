@@ -22,7 +22,22 @@ const Proposal = require('./models/Proposal');
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+const allowedOrigins = [
+  'http://localhost:5173', // Local development ke liye
+  'https://your-app-name.vercel.app' // Aapka Vercel deployment link
+];
+app.use(cors({
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      return callback(new Error('CORS Policy block: This origin is not allowed'), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
+}));
+// app.use(cors());
 app.use('/api/send-invoice', sendInvoiceRoute);
 
 // index.js ya middleware file mein
@@ -357,8 +372,8 @@ app.post('/api/create-checkout-session', async (req, res) => {
             quantity: 1,
         }],
         mode: 'payment',
-        success_url: 'http://localhost:5173/success',
-        cancel_url: 'http://localhost:5173/cancel',
+        success_url: `${process.env.FRONTEND_URL}/success`,
+        cancel_url: `${process.env.FRONTEND_URL}/cancel`,
         client_reference_id: verified.id, // User ki ID track karne ke liye
     });
 
@@ -581,8 +596,8 @@ app.post('/api/create-subscription', async (req, res) => {
             }],
             mode: 'payment',
             // SUCCESS URL MEIN METADATA NAHI, SESSION_ID BHEJTE HAIN
-            success_url: `http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: 'http://localhost:5173/',
+            success_url: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${process.env.FRONTEND_URL}`,
             metadata: { userId: verified.id } // YAHAN HAI METADATA!
         });
         res.json({ url: session.url });
