@@ -603,29 +603,65 @@ app.put('/api/proposals/mark-paid/:id', async (req, res) => {
 
 
 // Stripe Subscription Fix (Metadata yahan aayega)
+// app.post('/api/create-subscription', async (req, res) => {
+//     const token = req.headers['auth-token'];
+//     try {
+//         const verified = jwt.verify(token, process.env.JWT_SECRET);
+//         const session = await stripe.checkout.sessions.create({
+//             payment_method_types: ['card'],
+//             line_items: [{
+//                 price_data: {
+//                     currency: 'inr',
+//                     product_data: { name: 'FreelanceFlow Pro' },
+//                     unit_amount: 19900,
+//                 },
+//                 quantity: 1,
+//             }],
+//             mode: 'payment',
+//             // SUCCESS URL MEIN METADATA NAHI, SESSION_ID BHEJTE HAIN
+//             success_url: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+//             cancel_url: `${process.env.FRONTEND_URL}`,
+//             metadata: { userId: verified.id } // YAHAN HAI METADATA!
+//         });
+//         res.json({ url: session.url });
+//     } catch (e) {
+//         res.status(500).json({ error: e.message });
+//     }
+// });
+
+
+
 app.post('/api/create-subscription', async (req, res) => {
     const token = req.headers['auth-token'];
+    
+    // 1. Pehle check karo user login hai ya nahi
+    if (!token) return res.status(401).json({ success: false, message: "No Token Provided" });
+
     try {
         const verified = jwt.verify(token, process.env.JWT_SECRET);
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: [{
-                price_data: {
-                    currency: 'inr',
-                    product_data: { name: 'FreelanceFlow Pro' },
-                    unit_amount: 19900,
-                },
-                quantity: 1,
-            }],
-            mode: 'payment',
-            // SUCCESS URL MEIN METADATA NAHI, SESSION_ID BHEJTE HAIN
-            success_url: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${process.env.FRONTEND_URL}`,
-            metadata: { userId: verified.id } // YAHAN HAI METADATA!
+        
+        // 2. Razorpay Subscription options
+        const options = {
+            plan_id: "plan_SCuKbq5WtfZjMV", // <-- Apni Real Plan ID yahan dalein
+            customer_notify: 1, 
+            total_count: 12, // 1 saal tak monthly chalega
+            notes: {
+                userId: verified.id // User ki ID track karne ke liye
+            }
+        };
+
+        // 3. Razorpay se Subscription ID generate karein
+        const subscription = await razorpay.subscriptions.create(options);
+        
+        // 4. Frontend ko subscription_id bhej dein
+        res.json({
+            success: true,
+            subscription_id: subscription.id, 
         });
-        res.json({ url: session.url });
-    } catch (e) {
-        res.status(500).json({ error: e.message });
+
+    } catch (error) {
+        console.error("Razorpay Subscription Error:", error);
+        res.status(500).json({ success: false, message: error.message || "Subscription fail ho gayi" });
     }
 });
 
