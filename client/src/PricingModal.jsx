@@ -314,7 +314,8 @@
     const handleSubscription = async () => {
       setIsPaying(true)
       try {
-          const token = localStorage.getItem('auth-token');
+          // const token = localStorage.getItem('auth-token');
+          const token = localStorage.getItem('token');
           const API_URL = import.meta.env.VITE_API_BASE_URL;
 
           // 1. Backend se Subscription ID mangwao
