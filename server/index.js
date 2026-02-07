@@ -43,7 +43,9 @@ app.use(express.json());
 // Sirf apne Vercel URL aur Localhost ko allow karein
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://freelance-client-managment-system.vercel.app' // Aapka Vercel URL
+  'https://freelance-client-managment-system.vercel.app', // Aapka Vercel URL
+  'https://freelance-client-managment-system-42lb5vjrm.vercel.app',
+  /\.vercel\.app$/
 ];
 app.use(cors({
   origin: function (origin, callback) {
