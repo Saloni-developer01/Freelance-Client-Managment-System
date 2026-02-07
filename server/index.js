@@ -22,22 +22,45 @@ const Proposal = require('./models/Proposal');
 
 const app = express();
 app.use(express.json());
+// const allowedOrigins = [
+//   'http://localhost:5173', // Local development ke liye
+//   'https://your-app-name.vercel.app' // Aapka Vercel deployment link
+// ];
+// app.use(cors({
+//   origin: function (origin, callback) {
+//     // allow requests with no origin (like mobile apps or curl requests)
+//     if (!origin) return callback(null, true);
+//     if (allowedOrigins.indexOf(origin) === -1) {
+//       return callback(new Error('CORS Policy block: This origin is not allowed'), false);
+//     }
+//     return callback(null, true);
+//   },
+//   credentials: true
+// }));
+// app.use(cors());
+
+// new
+// Sirf apne Vercel URL aur Localhost ko allow karein
 const allowedOrigins = [
-  'http://localhost:5173', // Local development ke liye
-  'https://your-app-name.vercel.app' // Aapka Vercel deployment link
+  'http://localhost:5173',
+  'https://freelance-client-managment-system.vercel.app' // Aapka Vercel URL
 ];
 app.use(cors({
   origin: function (origin, callback) {
-    // allow requests with no origin (like mobile apps or curl requests)
+    // requests with no origin are allowed (like mobile apps or curl)
     if (!origin) return callback(null, true);
     if (allowedOrigins.indexOf(origin) === -1) {
-      return callback(new Error('CORS Policy block: This origin is not allowed'), false);
+      var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
     }
     return callback(null, true);
   },
-  credentials: true
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "auth-token", "Authorization"] // 'auth-token' add karna zaroori hai
 }));
-// app.use(cors());
+
+
 app.use('/api/send-invoice', sendInvoiceRoute);
 
 // index.js ya middleware file mein
