@@ -11,6 +11,7 @@ import { Mail } from 'lucide-react'; // Icons import karein
 import { Toaster, toast } from 'react-hot-toast';
 import ProposalModal from './ProposalModal';
 import ClientProposalView from './ClientProposalView';
+import LegalModal from './LegalModal';
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token'));
@@ -31,6 +32,7 @@ function App() {
   const isProposalView = path.startsWith('/view-proposal/');
   const proposalToken = isProposalView ? path.split('/').pop() : null;
   const [proposals, setProposals] = useState([]);
+  const [showLegal, setShowLegal] = useState(false);
 
   const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
@@ -1383,6 +1385,14 @@ function App() {
           </div>
         </div>
       )}
+
+      <footer className="py-6 text-center text-slate-500 text-xs mt-2">
+        <button onClick={() => setShowLegal(true)} className="hover:text-indigo-400 underline">
+          Privacy, Refund & Contact Policy
+        </button>
+      </footer>
+
+      {showLegal && <LegalModal setShowLegal={setShowLegal} />}
     </div>
   );
 }
