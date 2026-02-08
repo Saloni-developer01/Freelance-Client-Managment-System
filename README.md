@@ -32,7 +32,7 @@ If you want to run this project locally, follow these steps:
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/Saloni-developer01/freelance-flow.git](https://github.com/Saloni-developer01/Freelance-Client-Managment-System.git)
+   git clone https://github.com/Saloni-developer01/Freelance-Client-Managment-System.git
    cd freelance-flow
 
 2. **Setup Backend:**
