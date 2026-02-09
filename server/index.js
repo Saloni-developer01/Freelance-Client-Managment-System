@@ -6,7 +6,13 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Razorpay = require('razorpay');
-const nodemailer = require('nodemailer');
+// const nodemailer = require('nodemailer');
+try {
+    const nodemailer = require('nodemailer');
+    console.log("Nodemailer loaded successfully!");
+} catch (err) {
+    console.error("Nodemailer loading failed:", err.message);
+}
 const sendInvoiceRoute = require('./api/send-invoice');
 const approveAndSendRoute = require('./api/approveAndSend');
 
