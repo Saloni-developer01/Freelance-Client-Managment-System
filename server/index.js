@@ -44,22 +44,43 @@ app.use(express.json());
 const allowedOrigins = [
   'http://localhost:5173',
   'https://freelance-client-managment-system.vercel.app', // Aapka Vercel URL
-  'https://freelance-client-managment-system-42lb5vjrm.vercel.app',
-  /\.vercel\.app$/
+//   'https://freelance-client-managment-system-42lb5vjrm.vercel.app',
+//   /\.vercel\.app$/
 ];
+// app.use(cors({
+//   origin: function (origin, callback) {
+//     // requests with no origin are allowed (like mobile apps or curl)
+//     if (!origin) return callback(null, true);
+
+//     if (allowedOrigins.indexOf(origin) === -1) {
+//       var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+//       return callback(new Error(msg), false);
+//     }
+//     return callback(null, true);
+//   },
+//   credentials: true,
+//   methods: ["GET", "POST", "PUT", "DELETE"],
+//   allowedHeaders: ["Content-Type", "auth-token", "Authorization"] // 'auth-token' add karna zaroori hai
+// }));
+
+//new
 app.use(cors({
   origin: function (origin, callback) {
-    // requests with no origin are allowed (like mobile apps or curl)
+    // Allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
+
+    // Check if origin is in the allowed list OR if it ends with .vercel.app
+    const isAllowed = allowedOrigins.includes(origin) || /\.vercel\.app$/.test(origin);
+
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      callback(new Error('The CORS policy for this site does not allow access from the specified Origin.'), false);
     }
-    return callback(null, true);
   },
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "auth-token", "Authorization"] // 'auth-token' add karna zaroori hai
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "auth-token", "Authorization"]
 }));
 
 
