@@ -47,12 +47,12 @@ app.use(express.json());
 
 // new
 // Sirf apne Vercel URL aur Localhost ko allow karein
-const allowedOrigins = [
-  'http://localhost:5173',
-  'https://freelance-client-managment-system.vercel.app', // Aapka Vercel URL
-//   'https://freelance-client-managment-system-42lb5vjrm.vercel.app',
-//   /\.vercel\.app$/
-];
+// const allowedOrigins = [
+//   'http://localhost:5173',
+//   'https://freelance-client-managment-system.vercel.app', // Aapka Vercel URL
+// //   'https://freelance-client-managment-system-42lb5vjrm.vercel.app',
+// //   /\.vercel\.app$/
+// ];
 // app.use(cors({
 //   origin: function (origin, callback) {
 //     // requests with no origin are allowed (like mobile apps or curl)
@@ -70,18 +70,25 @@ const allowedOrigins = [
 // }));
 
 //new
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://freelance-client-managment-system.vercel.app'
+];
+
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl)
+    // 1. Allow requests with no origin (like mobile apps/postman)
     if (!origin) return callback(null, true);
 
-    // Check if origin is in the allowed list OR if it ends with .vercel.app
-    const isAllowed = allowedOrigins.includes(origin) || /\.vercel\.app$/.test(origin);
+    // 2. Check if origin is in allowed list OR is a Vercel preview link
+    const isAllowed = allowedOrigins.includes(origin) || 
+                      origin.includes('vercel.app');
 
     if (isAllowed) {
-      callback(null, true);
+      return callback(null, true);
     } else {
-      callback(new Error('The CORS policy for this site does not allow access from the specified Origin.'), false);
+      console.log("Blocked Origin:", origin); // Ye hume debug mein help karega
+      return callback(new Error('CORS Policy Blocked'), false);
     }
   },
   credentials: true,
