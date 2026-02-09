@@ -260,12 +260,24 @@ app.post('/api/proposals', async (req, res) => {
 app.post('/api/send-proposal-email', async (req, res) => {
   const { clientEmail, clientName, freelancerEmail, freelancerName, proposalTitle, shareLink } = req.body;
 
-  let transporter = nodemailer.createTransport({
-    service: 'gmail',
+//   let transporter = nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//       user: 'webhostingportfolio124@gmail.com', // Aapka email
+//       pass: 'luyx vtzs nosl rupt'     // Gmail App Password
+//     }
+//   });
+
+// new
+let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
     auth: {
-      user: 'webhostingportfolio124@gmail.com', // Aapka email
-      pass: 'luyx vtzs nosl rupt'     // Gmail App Password
-    }
+      user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+    },
+    connectionTimeout: 10000, // 10 seconds wait karega
   });
 
 //   const mailOptions = {
@@ -585,13 +597,24 @@ app.get('/api/proposals', async (req, res) => {
 app.post('/api/payment-success-email', async (req, res) => {
     const { clientEmail, clientName, amount, projectTitle, paymentId } = req.body;
 
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'webhostingportfolio124@gmail.com',
-            pass: 'luyx vtzs nosl rupt'
-        }
-    });
+    // const transporter = nodemailer.createTransport({
+    //     service: 'gmail',
+    //     auth: {
+    //         user: 'webhostingportfolio124@gmail.com',
+    //         pass: 'luyx vtzs nosl rupt'
+    //     }
+    // });
+
+    let transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true, // Port 465 ke liye true hota hai
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  },
+  connectionTimeout: 10000, // 10 seconds wait karega
+});
 
     const mailOptions = {
         from: '"FreelanceFlow Payments" <webhostingportfolio124@gmail.com>',
