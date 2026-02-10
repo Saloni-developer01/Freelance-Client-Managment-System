@@ -269,16 +269,19 @@ app.post('/api/send-proposal-email', async (req, res) => {
 //   });
 
 // new
-let transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-    auth: {
-      user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-    },
-    connectionTimeout: 10000, // 10 seconds wait karega
-  });
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false, // 587 ke liye false hona chahiye
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+  tls: {
+    rejectUnauthorized: false // Ye connection ko block hone se rokta hai
+  },
+  connectionTimeout: 20000, // Wait time badha kar 20 seconds kar diya
+});
 
 //   const mailOptions = {
 //     from: `"${freelancerName}" <webhostingportfolio124@gmail.com>`,
@@ -605,15 +608,18 @@ app.post('/api/payment-success-email', async (req, res) => {
     //     }
     // });
 
-    let transporter = nodemailer.createTransport({
+   const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 465,
-  secure: true, // Port 465 ke liye true hota hai
+  port: 587,
+  secure: false, // 587 ke liye false hona chahiye
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
+    pass: process.env.EMAIL_PASS,
   },
-  connectionTimeout: 10000, // 10 seconds wait karega
+  tls: {
+    rejectUnauthorized: false // Ye connection ko block hone se rokta hai
+  },
+  connectionTimeout: 20000, // Wait time badha kar 20 seconds kar diya
 });
 
     const mailOptions = {

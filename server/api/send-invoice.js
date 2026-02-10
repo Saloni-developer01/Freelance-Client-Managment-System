@@ -19,13 +19,28 @@ router.post('/', async (req, res) => {
     const taxAmount = (baseBudget * rate) / 100;
     const finalTotal = baseBudget + taxAmount;
 
+    // const transporter = nodemailer.createTransport({
+    //     service: 'gmail',
+    //     auth: {
+    //         user: 'webhostingportfolio124@gmail.com',
+    //         pass: 'luyx vtzs nosl rupt' // Aapka app password
+    //     }
+    // });
+
+    //new
     const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'webhostingportfolio124@gmail.com',
-            pass: 'luyx vtzs nosl rupt' // Aapka app password
-        }
-    });
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false, // 587 ke liye false hona chahiye
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+  tls: {
+    rejectUnauthorized: false // Ye connection ko block hone se rokta hai
+  },
+  connectionTimeout: 20000, // Wait time badha kar 20 seconds kar diya
+});
 
     const mailOptions = {
         from: `"${freelancerName} via FreelanceFlow" <webhostingportfolio124@gmail.com>`,
