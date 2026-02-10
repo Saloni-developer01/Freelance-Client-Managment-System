@@ -271,17 +271,18 @@ app.post('/api/send-proposal-email', async (req, res) => {
 
 // new
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false, // 587 ke liye false hona chahiye
+  service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false // Ye connection ko block hone se rokta hai
-  },
-  connectionTimeout: 20000, // Wait time badha kar 20 seconds kar diya
+    pass: process.env.EMAIL_PASS
+  }
+});
+transporter.verify(function (error, success) {
+  if (error) {
+    console.log("Transporter Error:", error);
+  } else {
+    console.log("Server is ready to take our messages");
+  }
 });
 
 //   const mailOptions = {
@@ -609,18 +610,20 @@ app.post('/api/payment-success-email', async (req, res) => {
     //     }
     // });
 
-   const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false, // 587 ke liye false hona chahiye
+    const transporter = nodemailer.createTransport({
+  service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false // Ye connection ko block hone se rokta hai
-  },
-  connectionTimeout: 20000, // Wait time badha kar 20 seconds kar diya
+    pass: process.env.EMAIL_PASS
+  }
+});
+
+    transporter.verify(function (error, success) {
+  if (error) {
+    console.log("Transporter Error:", error);
+  } else {
+    console.log("Server is ready to take our messages");
+  }
 });
 
     const mailOptions = {
