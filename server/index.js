@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+require('dotenv').config();
 const crypto = require('crypto');
 const stripe = require('stripe')('aapki_stripe_secret_key');
 const cors = require('cors');
@@ -16,7 +17,7 @@ try {
 const sendInvoiceRoute = require('./api/send-invoice');
 const approveAndSendRoute = require('./api/approveAndSend');
 
-require('dotenv').config();
+
 const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
     key_secret: process.env.RAZORPAY_KEY_SECRET,
