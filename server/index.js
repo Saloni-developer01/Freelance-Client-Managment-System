@@ -822,5 +822,8 @@ app.delete('/api/clients/:id/assets/:assetId', async (req, res) => {
     }
 });
 
+app.get("/", (req,res)=>{
+    res.send("Server is running!");
+})
 
 app.listen(5000, () => console.log("Server running on port 5000"));
